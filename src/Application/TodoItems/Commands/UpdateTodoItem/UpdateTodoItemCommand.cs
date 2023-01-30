@@ -12,6 +12,8 @@ public record UpdateTodoItemCommand : IRequest
     public string? Title { get; init; }
 
     public bool Done { get; init; }
+
+    public string? Color { get; init; }
 }
 
 public class UpdateTodoItemCommandHandler : IRequestHandler<UpdateTodoItemCommand>

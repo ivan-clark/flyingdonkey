@@ -32,7 +32,8 @@ export class TodoComponent implements OnInit {
     id: [null],
     listId: [null],
     priority: [''],
-    note: ['']
+    note: [''],
+    color: ['']
   });
 
 
@@ -147,6 +148,7 @@ export class TodoComponent implements OnInit {
   }
 
   updateItemDetails(): void {
+    this.itemDetailsFormGroup.patchValue({...this.itemDetailsFormGroup, color: this.selectedItem.color});
     const item = new UpdateTodoItemDetailCommand(this.itemDetailsFormGroup.value);
     this.itemsClient.updateItemDetails(this.selectedItem.id, item).subscribe(
       () => {
@@ -163,6 +165,7 @@ export class TodoComponent implements OnInit {
 
         this.selectedItem.priority = item.priority;
         this.selectedItem.note = item.note;
+        this.selectedItem.color = item.color;
         this.itemDetailsModalRef.hide();
         this.itemDetailsFormGroup.reset();
       },
@@ -260,5 +263,14 @@ export class TodoComponent implements OnInit {
     clearInterval(this.deleteCountDownInterval);
     this.deleteCountDown = 0;
     this.deleting = false;
+  }
+
+  selectColor(color: string) {
+    this.selectedItem.color = color;
+  }
+
+  handleClose(): void  {
+    this.selectedItem.color = this.itemDetailsFormGroup.value.color;
+    this.itemDetailsModalRef.hide();
   }
 }
