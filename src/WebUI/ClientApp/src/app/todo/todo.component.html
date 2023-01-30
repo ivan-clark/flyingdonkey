@@ -38,7 +38,7 @@
         </button>
       </div>
       <ul id="todo-items" class="list-group mb-2">
-        <li class="list-group-item" *ngFor="let item of selectedList.items; index as i">
+        <li class="list-group-item" [style.background-color]="item.color" *ngFor="let item of selectedList.items; index as i">
           <div class="d-flex">
             <div class="todo-item-checkbox">
               <input type="checkbox" [(ngModel)]="item.done" (change)="updateItem(item)" />
@@ -103,7 +103,7 @@
 </ng-template>
 
 <ng-template #itemDetailsModalTemplate>
-  <div class="modal-header">
+  <div class="modal-header" [style.background-color]="selectedItem.color">
     <h4 class="modal-title pull-left">Item Details</h4>
     <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="itemDetailsModalRef.hide()">
       <span aria-hidden="true" class="visually-hidden">&times;</span>
@@ -126,6 +126,18 @@
       <div class="form-group">
         <label for="note">Note</label>
         <textarea id="note" class="form-control" rows="3" formControlName="note"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="color">Color</label>
+        <!-- color picker -->
+        <div class="color-picker">
+          <div class="color-option" [ngStyle]="{'background-color': 'white'}" (click)="selectColor('white')"></div>
+          <div class="color-option" [ngStyle]="{'background-color': '#f7a097'}" (click)="selectColor('#f7a097')"></div>
+          <div class="color-option" [ngStyle]="{'background-color': '#7fbbdf'}" (click)="selectColor('#7fbbdf')"></div>
+          <div class="color-option" [ngStyle]="{'background-color': '#9ed9a1'}" (click)="selectColor('#9ed9a1')"></div>
+          <div class="color-option" [ngStyle]="{'background-color': '#fbf595'}" (click)="selectColor('#fbf595')"></div>
+        </div>
+        <!-- color picker -->
       </div>
     </form>
     <div *ngIf="debug">
