@@ -7,6 +7,7 @@ import {
   CreateTodoListCommand, UpdateTodoListCommand,
   CreateTodoItemCommand, UpdateTodoItemDetailCommand
 } from '../web-api-client';
+import {MatChipInputEvent} from '@angular/material/chips';
 
 @Component({
   selector: 'app-todo-component',
@@ -32,7 +33,8 @@ export class TodoComponent implements OnInit {
     id: [null],
     listId: [null],
     priority: [''],
-    note: ['']
+    note: [''],
+    tag: ['']
   });
 
 
@@ -147,6 +149,7 @@ export class TodoComponent implements OnInit {
   }
 
   updateItemDetails(): void {
+    this.itemDetailsFormGroup.patchValue({...this.itemDetailsFormGroup, tag: this.selectedItem.tag});
     const item = new UpdateTodoItemDetailCommand(this.itemDetailsFormGroup.value);
     this.itemsClient.updateItemDetails(this.selectedItem.id, item).subscribe(
       () => {
@@ -163,6 +166,7 @@ export class TodoComponent implements OnInit {
 
         this.selectedItem.priority = item.priority;
         this.selectedItem.note = item.note;
+        this.selectedItem.tag = item.tag;
         this.itemDetailsModalRef.hide();
         this.itemDetailsFormGroup.reset();
       },
@@ -260,5 +264,28 @@ export class TodoComponent implements OnInit {
     clearInterval(this.deleteCountDownInterval);
     this.deleteCountDown = 0;
     this.deleting = false;
+  }
+
+  addTag(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if (value) {
+      this.selectedItem.tag = this.selectedItem.tag.trim() === '' ? value : this.selectedItem.tag + `, ${value}`
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+  }
+
+  removeTag(index: number): void {
+    let tags = this.selectedItem.tag.split(",");
+    tags.splice(index, 1);
+    this.selectedItem.tag = tags.toString();
+  }
+
+  handleClose(): void  {
+    this.selectedItem.tag = this.itemDetailsFormGroup.value.tag;
+    this.itemDetailsModalRef.hide();
   }
 }

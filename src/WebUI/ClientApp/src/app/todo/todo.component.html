@@ -105,7 +105,7 @@
 <ng-template #itemDetailsModalTemplate>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Item Details</h4>
-    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="itemDetailsModalRef.hide()">
+    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="handleClose()">
       <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
   </div>
@@ -127,6 +127,25 @@
         <label for="note">Note</label>
         <textarea id="note" class="form-control" rows="3" formControlName="note"></textarea>
       </div>
+      <div class="form-group">
+        <label for="tag">Tag</label>
+        <!-- Tags -->
+        <mat-form-field class="example-chip-list" appearance="fill">
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let tag of (selectedItem.tag && selectedItem.tag.length ? selectedItem.tag.trim().split(',') : []); let i = index" (removed)="removeTag(i)">
+              {{tag}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input placeholder="Add tag..." 
+                   [matChipInputFor]="chipList"            
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="addTag($event)">
+          </mat-chip-list>
+        </mat-form-field>
+        <!-- Tags -->
+      </div>
     </form>
     <div *ngIf="debug">
       <pre>{{ itemDetailsFormGroup.value | json }}</pre>
@@ -138,7 +157,7 @@
         <button class="btn btn-default text-danger" (click)="deleteItem(selectedItem, true)">{{deleting ? 'Deleting ' + deleteCountDown + ' ...' : 'Delete'}}</button>
       </div>
       <div class="float-end">
-        <button class="btn btn-default" (click)="itemDetailsModalRef.hide()">Cancel</button>
+        <button class="btn btn-default" (click)="handleClose()">Cancel</button>
         <button class="btn btn-primary" (click)="updateItemDetails()">Update</button>
       </div>
     </div>
