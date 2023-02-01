@@ -1005,6 +1005,7 @@ export class TodoListDto implements ITodoListDto {
     title?: string | undefined;
     colour?: string | undefined;
     items?: TodoItemDto[];
+    isDeleted?: boolean;
 
     constructor(data?: ITodoListDto) {
         if (data) {
@@ -1025,6 +1026,7 @@ export class TodoListDto implements ITodoListDto {
                 for (let item of _data["items"])
                     this.items!.push(TodoItemDto.fromJS(item));
             }
+            this.isDeleted = _data["isDeleted"];
         }
     }
 
@@ -1045,6 +1047,7 @@ export class TodoListDto implements ITodoListDto {
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
+        data["isDeleted"] = this.isDeleted;
         return data;
     }
 }
@@ -1054,6 +1057,7 @@ export interface ITodoListDto {
     title?: string | undefined;
     colour?: string | undefined;
     items?: TodoItemDto[];
+    isDeleted?: boolean;
 }
 
 export class TodoItemDto implements ITodoItemDto {
@@ -1063,6 +1067,7 @@ export class TodoItemDto implements ITodoItemDto {
     done?: boolean;
     priority?: number;
     note?: string | undefined;
+    isDeleted?: boolean;
 
     constructor(data?: ITodoItemDto) {
         if (data) {
@@ -1081,6 +1086,7 @@ export class TodoItemDto implements ITodoItemDto {
             this.done = _data["done"];
             this.priority = _data["priority"];
             this.note = _data["note"];
+            this.isDeleted = _data["isDeleted"];
         }
     }
 
@@ -1099,6 +1105,7 @@ export class TodoItemDto implements ITodoItemDto {
         data["done"] = this.done;
         data["priority"] = this.priority;
         data["note"] = this.note;
+        data["isDeleted"] = this.isDeleted;
         return data;
     }
 }
@@ -1110,6 +1117,7 @@ export interface ITodoItemDto {
     done?: boolean;
     priority?: number;
     note?: string | undefined;
+    isDeleted?: boolean;
 }
 
 export class CreateTodoListCommand implements ICreateTodoListCommand {

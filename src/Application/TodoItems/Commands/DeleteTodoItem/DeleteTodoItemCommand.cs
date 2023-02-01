@@ -27,9 +27,8 @@ public class DeleteTodoItemCommandHandler : IRequestHandler<DeleteTodoItemComman
             throw new NotFoundException(nameof(TodoItem), request.Id);
         }
 
-        _context.TodoItems.Remove(entity);
-
-        entity.AddDomainEvent(new TodoItemDeletedEvent(entity));
+        // soft delete
+        entity.IsDeleted = true;
 
         await _context.SaveChangesAsync(cancellationToken);
 
