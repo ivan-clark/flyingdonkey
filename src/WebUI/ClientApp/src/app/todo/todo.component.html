@@ -29,7 +29,7 @@
         </li>
       </ul>
     </div>
-    <div class="col-sm-8" *ngIf="selectedList">
+    <div class="col-sm-6" *ngIf="selectedList">
       <div class="clearfix">
         <h2 class="float-start">{{ selectedList.title }}</h2>
         <button id="listOptions" class="btn btn-default float-end" title="List Options..."
@@ -38,7 +38,7 @@
         </button>
       </div>
       <ul id="todo-items" class="list-group mb-2">
-        <li class="list-group-item" *ngFor="let item of selectedList.items; index as i">
+        <li class="list-group-item" *ngFor="let item of selectedList.items | tagFilter: tags; index as i">
           <div class="d-flex">
             <div class="todo-item-checkbox">
               <input type="checkbox" [(ngModel)]="item.done" (change)="updateItem(item)" />
@@ -65,6 +65,23 @@
         </li>
       </ul>
     </div>
+    <!-- Filter -->
+    <div class="col-sm-2">
+      <h2>Filter by tags:</h2>
+      <div id="filter-menu">
+        <ul id="filter-options">
+          <li *ngFor="let tag of tags">
+            <label>
+              <input type="checkbox" [(ngModel)]="tag.checked">
+              <span class="checkmark"></span>
+              {{ tag.name }}
+            </label>
+          </li>
+        </ul>
+      </div>
+      <!-- <button (click)="click()">CLICK</button> -->
+    </div>
+    <!-- Filter -->
   </div>
 </div>
 
@@ -105,7 +122,7 @@
 <ng-template #itemDetailsModalTemplate>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Item Details</h4>
-    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="itemDetailsModalRef.hide()">
+    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="handleClose()">
       <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
   </div>
@@ -127,6 +144,25 @@
         <label for="note">Note</label>
         <textarea id="note" class="form-control" rows="3" formControlName="note"></textarea>
       </div>
+      <div class="form-group">
+        <label for="tag">Tag</label>
+        <!-- Tags -->
+        <mat-form-field class="example-chip-list" appearance="fill">
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let tag of (selectedItem.tag && selectedItem.tag.length ? selectedItem.tag.trim().split(',') : []); let i = index" (removed)="removeTag(i)">
+              {{tag}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input placeholder="Add tag..." 
+                   [matChipInputFor]="chipList"            
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="addTag($event)">
+          </mat-chip-list>
+        </mat-form-field>
+        <!-- Tags -->
+      </div>
     </form>
     <div *ngIf="debug">
       <pre>{{ itemDetailsFormGroup.value | json }}</pre>
@@ -138,7 +174,7 @@
         <button class="btn btn-default text-danger" (click)="deleteItem(selectedItem, true)">{{deleting ? 'Deleting ' + deleteCountDown + ' ...' : 'Delete'}}</button>
       </div>
       <div class="float-end">
-        <button class="btn btn-default" (click)="itemDetailsModalRef.hide()">Cancel</button>
+        <button class="btn btn-default" (click)="handleClose()">Cancel</button>
         <button class="btn btn-primary" (click)="updateItemDetails()">Update</button>
       </div>
     </div>
