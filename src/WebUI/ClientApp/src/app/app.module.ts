@@ -21,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { TagFilterPipe } from './tag.filter';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     CounterComponent,
     FetchDataComponent,
     TodoComponent,
-    TokenComponent
+    TokenComponent,
+    TagFilterPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

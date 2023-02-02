@@ -20,6 +20,7 @@ export class TodoComponent implements OnInit {
   deleteCountDown = 0;
   deleteCountDownInterval: any;
   lists: TodoListDto[];
+  tags: [{checked: boolean, name: string}];
   priorityLevels: PriorityLevelDto[];
   selectedList: TodoListDto;
   selectedItem: TodoItemDto;
@@ -53,6 +54,14 @@ export class TodoComponent implements OnInit {
         if (this.lists.length) {
           this.selectedList = this.lists[0];
         }
+
+        let resultTags = [].concat.apply([], result.lists.map(l => l.items))
+          .filter(i => i.tag)
+          .map(i => i.tag.toString().trim().split(','))
+          .reduce((acc, val) => acc.concat(val), [])
+          .filter((tag, index, self) => self.indexOf(tag) === index);
+
+        this.tags = resultTags.map(tag => ({ checked: true, name: tag }));
       },
       error => console.error(error)
     );
@@ -271,7 +280,7 @@ export class TodoComponent implements OnInit {
 
     // Add our fruit
     if (value) {
-      this.selectedItem.tag = this.selectedItem.tag.trim() === '' ? value : this.selectedItem.tag + `, ${value}`
+      this.selectedItem.tag = this.selectedItem.tag && this.selectedItem.tag.trim() ? this.selectedItem.tag + `, ${value}` : value;
     }
 
     // Clear the input value

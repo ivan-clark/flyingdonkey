@@ -29,7 +29,7 @@
         </li>
       </ul>
     </div>
-    <div class="col-sm-8" *ngIf="selectedList">
+    <div class="col-sm-6" *ngIf="selectedList">
       <div class="clearfix">
         <h2 class="float-start">{{ selectedList.title }}</h2>
         <button id="listOptions" class="btn btn-default float-end" title="List Options..."
@@ -38,7 +38,7 @@
         </button>
       </div>
       <ul id="todo-items" class="list-group mb-2">
-        <li class="list-group-item" *ngFor="let item of selectedList.items; index as i">
+        <li class="list-group-item" *ngFor="let item of selectedList.items | tagFilter: tags; index as i">
           <div class="d-flex">
             <div class="todo-item-checkbox">
               <input type="checkbox" [(ngModel)]="item.done" (change)="updateItem(item)" />
@@ -65,6 +65,23 @@
         </li>
       </ul>
     </div>
+    <!-- Filter -->
+    <div class="col-sm-2">
+      <h2>Filter by tags:</h2>
+      <div id="filter-menu">
+        <ul id="filter-options">
+          <li *ngFor="let tag of tags">
+            <label>
+              <input type="checkbox" [(ngModel)]="tag.checked">
+              <span class="checkmark"></span>
+              {{ tag.name }}
+            </label>
+          </li>
+        </ul>
+      </div>
+      <!-- <button (click)="click()">CLICK</button> -->
+    </div>
+    <!-- Filter -->
   </div>
 </div>
 
